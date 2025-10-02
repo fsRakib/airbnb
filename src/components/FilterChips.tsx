@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface FilterChipsProps {
   onFiltersChange?: (filters: FilterState) => void;
@@ -23,55 +23,73 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
   const [showMoreFilters, setShowMoreFilters] = useState(false);
 
   // Initialize filters from URL
-  const [selectedType, setSelectedType] = useState(searchParams.get('propertyType') || '');
-  const [minPrice, setMinPrice] = useState(parseInt(searchParams.get('minPrice') || '0'));
-  const [maxPrice, setMaxPrice] = useState(parseInt(searchParams.get('maxPrice') || '1000'));
+  const [selectedType, setSelectedType] = useState(
+    searchParams.get("propertyType") || ""
+  );
+  const [minPrice, setMinPrice] = useState(
+    parseInt(searchParams.get("minPrice") || "0")
+  );
+  const [maxPrice, setMaxPrice] = useState(
+    parseInt(searchParams.get("maxPrice") || "1000")
+  );
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>(
-    searchParams.get('amenities')?.split(',').filter(Boolean) || []
+    searchParams.get("amenities")?.split(",").filter(Boolean) || []
   );
 
   const propertyTypes = [
-    { id: 'apartment', name: 'Apartment', icon: '🏢' },
-    { id: 'house', name: 'House', icon: '🏠' },
-    { id: 'villa', name: 'Villa', icon: '🏖️' },
-    { id: 'cabin', name: 'Cabin', icon: '🏕️' },
-    { id: 'loft', name: 'Loft', icon: '🏙️' },
-    { id: 'studio', name: 'Studio', icon: '🏠' },
-    { id: 'condo', name: 'Condo', icon: '🏢' },
-    { id: 'townhouse', name: 'Townhouse', icon: '🏘️' }
+    { id: "apartment", name: "Apartment", icon: "🏢" },
+    { id: "house", name: "House", icon: "🏠" },
+    { id: "villa", name: "Villa", icon: "🏖️" },
+    { id: "cabin", name: "Cabin", icon: "🏕️" },
+    { id: "loft", name: "Loft", icon: "🏙️" },
+    { id: "studio", name: "Studio", icon: "🏠" },
+    { id: "condo", name: "Condo", icon: "🏢" },
+    { id: "townhouse", name: "Townhouse", icon: "🏘️" },
   ];
 
   const amenitiesList = [
-    'WiFi', 'Kitchen', 'Pool', 'Parking', 'Air conditioning', 
-    'TV', 'Washer', 'Dryer', 'Hot tub', 'Gym', 'Beach access',
-    'Fireplace', 'BBQ grill', 'Elevator', 'Pet friendly'
+    "WiFi",
+    "Kitchen",
+    "Pool",
+    "Parking",
+    "Air conditioning",
+    "TV",
+    "Washer",
+    "Dryer",
+    "Hot tub",
+    "Gym",
+    "Beach access",
+    "Fireplace",
+    "BBQ grill",
+    "Elevator",
+    "Pet friendly",
   ];
 
   const applyFilters = () => {
     const currentParams = new URLSearchParams(searchParams.toString());
-    
+
     if (selectedType) {
-      currentParams.set('propertyType', selectedType);
+      currentParams.set("propertyType", selectedType);
     } else {
-      currentParams.delete('propertyType');
+      currentParams.delete("propertyType");
     }
 
     if (minPrice > 0) {
-      currentParams.set('minPrice', minPrice.toString());
+      currentParams.set("minPrice", minPrice.toString());
     } else {
-      currentParams.delete('minPrice');
+      currentParams.delete("minPrice");
     }
 
     if (maxPrice < 1000) {
-      currentParams.set('maxPrice', maxPrice.toString());
+      currentParams.set("maxPrice", maxPrice.toString());
     } else {
-      currentParams.delete('maxPrice');
+      currentParams.delete("maxPrice");
     }
 
     if (selectedAmenities.length > 0) {
-      currentParams.set('amenities', selectedAmenities.join(','));
+      currentParams.set("amenities", selectedAmenities.join(","));
     } else {
-      currentParams.delete('amenities');
+      currentParams.delete("amenities");
     }
 
     router.push(`/?${currentParams.toString()}`);
@@ -81,72 +99,79 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
         propertyType: selectedType,
         minPrice,
         maxPrice,
-        amenities: selectedAmenities
+        amenities: selectedAmenities,
       });
     }
   };
 
   const clearFilters = () => {
-    setSelectedType('');
+    setSelectedType("");
     setMinPrice(0);
     setMaxPrice(1000);
     setSelectedAmenities([]);
 
     const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.delete('propertyType');
-    currentParams.delete('minPrice');  
-    currentParams.delete('maxPrice');
-    currentParams.delete('amenities');
+    currentParams.delete("propertyType");
+    currentParams.delete("minPrice");
+    currentParams.delete("maxPrice");
+    currentParams.delete("amenities");
 
     router.push(`/?${currentParams.toString()}`);
   };
 
   const toggleAmenity = (amenity: string) => {
-    setSelectedAmenities(prev => 
-      prev.includes(amenity) 
-        ? prev.filter(a => a !== amenity)
+    setSelectedAmenities((prev) =>
+      prev.includes(amenity)
+        ? prev.filter((a) => a !== amenity)
         : [...prev, amenity]
     );
   };
 
-  const hasActiveFilters = selectedType || minPrice > 0 || maxPrice < 1000 || selectedAmenities.length > 0;
+  const hasActiveFilters =
+    selectedType ||
+    minPrice > 0 ||
+    maxPrice < 1000 ||
+    selectedAmenities.length > 0;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Filter Chips */}
       <div className="flex flex-wrap gap-3 items-center">
-        
         {/* Property Type Filter */}
         <div className="relative">
           <button
             onClick={() => setShowTypeFilter(!showTypeFilter)}
             className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
-              selectedType 
-                ? 'bg-gray-900 text-white border-gray-900' 
-                : 'bg-white text-gray-900 border-gray-300 hover:border-gray-900'
+              selectedType
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-900 border-gray-300 hover:border-gray-900"
             }`}
           >
             Type
             {selectedType && (
               <span className="ml-2 bg-white bg-opacity-20 px-2 py-0.5 rounded-full text-xs">
-                {propertyTypes.find(t => t.id === selectedType)?.name}
+                {propertyTypes.find((t) => t.id === selectedType)?.name}
               </span>
             )}
           </button>
 
           {showTypeFilter && (
             <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-4 min-w-[280px]">
-              <h3 className="font-semibold text-gray-900 mb-3">Property Type</h3>
+              <h3 className="font-semibold text-gray-900 mb-3">
+                Property Type
+              </h3>
               <div className="grid grid-cols-2 gap-2">
-                {propertyTypes.map(type => (
+                {propertyTypes.map((type) => (
                   <button
                     key={type.id}
                     type="button"
-                    onClick={() => setSelectedType(selectedType === type.id ? '' : type.id)}
+                    onClick={() =>
+                      setSelectedType(selectedType === type.id ? "" : type.id)
+                    }
                     className={`p-3 rounded-lg border text-left transition-colors ${
                       selectedType === type.id
-                        ? 'border-gray-900 bg-gray-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? "border-gray-900 bg-gray-50"
+                        : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="text-lg mb-1">{type.icon}</div>
@@ -162,7 +187,7 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
                   Apply
                 </button>
                 <button
-                  onClick={() => setSelectedType('')}
+                  onClick={() => setSelectedType("")}
                   className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:border-gray-900"
                 >
                   Clear
@@ -178,8 +203,8 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
             onClick={() => setShowPriceFilter(!showPriceFilter)}
             className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
               minPrice > 0 || maxPrice < 1000
-                ? 'bg-gray-900 text-white border-gray-900' 
-                : 'bg-white text-gray-900 border-gray-300 hover:border-gray-900'
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-900 border-gray-300 hover:border-gray-900"
             }`}
           >
             Price
@@ -192,10 +217,14 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
 
           {showPriceFilter && (
             <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-4 min-w-[300px]">
-              <h3 className="font-semibold text-gray-900 mb-3">Price Range (per night)</h3>
+              <h3 className="font-semibold text-gray-900 mb-3">
+                Price Range (per night)
+              </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">Minimum Price</label>
+                  <label className="block text-sm text-gray-600 mb-1">
+                    Minimum Price
+                  </label>
                   <input
                     type="range"
                     min="0"
@@ -208,7 +237,9 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
                   <div className="text-sm text-gray-900 mt-1">${minPrice}</div>
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">Maximum Price</label>
+                  <label className="block text-sm text-gray-600 mb-1">
+                    Maximum Price
+                  </label>
                   <input
                     type="range"
                     min="100"
@@ -248,8 +279,8 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
             onClick={() => setShowMoreFilters(!showMoreFilters)}
             className={`px-4 py-2 rounded-full border text-sm font-medium transition-colors ${
               selectedAmenities.length > 0
-                ? 'bg-gray-900 text-white border-gray-900' 
-                : 'bg-white text-gray-900 border-gray-300 hover:border-gray-900'
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-900 border-gray-300 hover:border-gray-900"
             }`}
           >
             More filters
@@ -265,8 +296,11 @@ export default function FilterChips({ onFiltersChange }: FilterChipsProps) {
               <h3 className="font-semibold text-gray-900 mb-3">Amenities</h3>
               <div className="max-h-60 overflow-y-auto">
                 <div className="grid grid-cols-2 gap-2">
-                  {amenitiesList.map(amenity => (
-                    <label key={amenity} className="flex items-center space-x-2 cursor-pointer">
+                  {amenitiesList.map((amenity) => (
+                    <label
+                      key={amenity}
+                      className="flex items-center space-x-2 cursor-pointer"
+                    >
                       <input
                         type="checkbox"
                         checked={selectedAmenities.includes(amenity)}

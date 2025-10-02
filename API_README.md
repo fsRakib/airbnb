@@ -5,26 +5,30 @@ This document describes the REST API endpoints for the Airbnb clone backend buil
 ## Setup
 
 1. **Install Dependencies**
+
    ```bash
    npm install mongoose @types/mongoose
    ```
 
 2. **Environment Variables**
    Create a `.env.local` file in the root directory:
+
    ```
    MONGODB_URI=mongodb://localhost:27017/airbnb-clone
    # For MongoDB Atlas: mongodb+srv://username:password@cluster.mongodb.net/airbnb-clone
    ```
 
 3. **Start MongoDB**
+
    - Local: Ensure MongoDB is running locally
    - Atlas: Use the connection string in MONGODB_URI
 
 4. **Seed Database (Development Only)**
+
    ```bash
    # Start the development server
    npm run dev
-   
+
    # Then make a POST request to seed the database
    curl -X POST http://localhost:3000/api/seed
    ```
@@ -32,8 +36,9 @@ This document describes the REST API endpoints for the Airbnb clone backend buil
 ## Data Models
 
 ### Property Schema
+
 - `title`: String (required, max 200 chars)
-- `description`: String (required, max 2000 chars)  
+- `description`: String (required, max 2000 chars)
 - `images`: Array of image URLs
 - `pricePerNight`: Number (required, min 0)
 - `location`: Object with city, state, country, address, latitude, longitude
@@ -51,6 +56,7 @@ This document describes the REST API endpoints for the Airbnb clone backend buil
 - `isActive`: Boolean (default true)
 
 ### Booking Schema (embedded in Property)
+
 - `guestId`: String (required)
 - `checkIn`: Date (required)
 - `checkOut`: Date (required)
@@ -64,9 +70,11 @@ This document describes the REST API endpoints for the Airbnb clone backend buil
 ### Properties
 
 #### GET /api/properties
+
 Fetch properties with filtering, sorting, and pagination.
 
 **Query Parameters:**
+
 - `page`: Page number (default: 1)
 - `limit`: Items per page (default: 12)
 - `city`: Filter by city (case-insensitive partial match)
@@ -81,11 +89,13 @@ Fetch properties with filtering, sorting, and pagination.
 - `sortOrder`: asc/desc (default: desc)
 
 **Example:**
+
 ```bash
 curl "http://localhost:3000/api/properties?city=New%20York&guests=2&minPrice=100&maxPrice=200&checkIn=2024-12-01&checkOut=2024-12-05"
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -105,9 +115,11 @@ curl "http://localhost:3000/api/properties?city=New%20York&guests=2&minPrice=100
 ```
 
 #### POST /api/properties
+
 Create a new property listing (for hosts).
 
 **Request Body:**
+
 ```json
 {
   "title": "Beautiful Downtown Apartment",
@@ -116,11 +128,11 @@ Create a new property listing (for hosts).
   "pricePerNight": 150,
   "location": {
     "city": "New York",
-    "state": "New York", 
+    "state": "New York",
     "country": "United States",
     "address": "123 Main St, New York, NY 10001",
     "latitude": 40.7128,
-    "longitude": -74.0060
+    "longitude": -74.006
   },
   "hostId": "host123",
   "hostName": "John Doe",
@@ -133,25 +145,31 @@ Create a new property listing (for hosts).
 ```
 
 #### GET /api/properties/[id]
+
 Get a single property by ID with full details.
 
 **Example:**
+
 ```bash
 curl "http://localhost:3000/api/properties/65a1b2c3d4e5f6789abc1234"
 ```
 
 #### PUT /api/properties/[id]
+
 Update a property (for hosts).
 
 #### DELETE /api/properties/[id]
+
 Soft delete a property by setting `isActive: false`.
 
 ### Bookings
 
 #### POST /api/bookings
+
 Create a new booking.
 
 **Request Body:**
+
 ```json
 {
   "propertyId": "65a1b2c3d4e5f6789abc1234",
@@ -163,6 +181,7 @@ Create a new booking.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -183,27 +202,33 @@ Create a new booking.
 ```
 
 #### GET /api/bookings
+
 Get bookings with optional filtering.
 
 **Query Parameters:**
+
 - `guestId`: Filter by guest ID
-- `hostId`: Filter by host ID  
+- `hostId`: Filter by host ID
 - `status`: Filter by booking status
 - `page`: Page number (default: 1)
 - `limit`: Items per page (default: 10)
 
 **Example:**
+
 ```bash
 curl "http://localhost:3000/api/bookings?guestId=guest456&status=confirmed"
 ```
 
 #### GET /api/bookings/[id]
+
 Get a specific booking by ID.
 
 #### PATCH /api/bookings/[id]
+
 Update booking status (confirm, cancel).
 
 **Request Body:**
+
 ```json
 {
   "status": "confirmed",
@@ -212,14 +237,17 @@ Update booking status (confirm, cancel).
 ```
 
 #### DELETE /api/bookings/[id]
+
 Delete a booking (only if status is 'pending').
 
 ### Utility Endpoints
 
 #### POST /api/seed
+
 Seed the database with sample data (development only).
 
 #### GET /api/seed
+
 Check seeding status and property count.
 
 ## Error Handling
@@ -235,6 +263,7 @@ All endpoints return consistent error responses:
 ```
 
 Common HTTP status codes:
+
 - `200`: Success
 - `201`: Created
 - `400`: Bad Request (validation errors)
@@ -253,6 +282,7 @@ The system implements sophisticated availability checking:
 ## Database Indexes
 
 Optimized indexes for common queries:
+
 - Location (city, state)
 - Price range
 - Guest capacity

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Property from '@/models/Property';
-import mongoose from 'mongoose';
+import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import Property from "@/models/Property";
+import mongoose from "mongoose";
 
 // GET /api/properties/[id] - Fetch a single property by ID
 export async function GET(
@@ -18,20 +18,20 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid property ID format'
+          error: "Invalid property ID format",
         },
         { status: 400 }
       );
     }
 
     // Find the property by ID
-    const property = await Property.findById(id).lean();
+    const property = (await Property.findById(id).lean()) as any;
 
     if (!property) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Property not found'
+          error: "Property not found",
         },
         { status: 404 }
       );
@@ -42,7 +42,7 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: 'Property is not available'
+          error: "Property is not available",
         },
         { status: 404 }
       );
@@ -54,21 +54,20 @@ export async function GET(
       bookings: property.bookings.map((booking: any) => ({
         checkIn: booking.checkIn,
         checkOut: booking.checkOut,
-        status: booking.status
-      }))
+        status: booking.status,
+      })),
     };
 
     return NextResponse.json({
       success: true,
-      data: sanitizedProperty
+      data: sanitizedProperty,
     });
-
   } catch (error) {
-    console.error('Error fetching property:', error);
+    console.error("Error fetching property:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch property'
+        error: "Failed to fetch property",
       },
       { status: 500 }
     );
@@ -91,7 +90,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid property ID format'
+          error: "Invalid property ID format",
         },
         { status: 400 }
       );
@@ -99,28 +98,40 @@ export async function PUT(
 
     // Find the property first to check if it exists
     const existingProperty = await Property.findById(id);
-    
+
     if (!existingProperty) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Property not found'
+          error: "Property not found",
         },
         { status: 404 }
       );
     }
 
     // Remove fields that shouldn't be updated directly
-    const { _id, createdAt, bookings, rating, reviewCount, ...updateData } = body;
+    const { _id, createdAt, bookings, rating, reviewCount, ...updateData } =
+      body;
 
     // Validate property type if provided
     if (updateData.propertyType) {
-      const validPropertyTypes = ['apartment', 'house', 'villa', 'condo', 'cabin', 'loft', 'townhouse', 'studio'];
+      const validPropertyTypes = [
+        "apartment",
+        "house",
+        "villa",
+        "condo",
+        "cabin",
+        "loft",
+        "townhouse",
+        "studio",
+      ];
       if (!validPropertyTypes.includes(updateData.propertyType)) {
         return NextResponse.json(
           {
             success: false,
-            error: `Property type must be one of: ${validPropertyTypes.join(', ')}`
+            error: `Property type must be one of: ${validPropertyTypes.join(
+              ", "
+            )}`,
           },
           { status: 400 }
         );
@@ -128,11 +139,14 @@ export async function PUT(
     }
 
     // Validate numeric fields if provided
-    if (updateData.pricePerNight !== undefined && updateData.pricePerNight <= 0) {
+    if (
+      updateData.pricePerNight !== undefined &&
+      updateData.pricePerNight <= 0
+    ) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Price must be positive'
+          error: "Price must be positive",
         },
         { status: 400 }
       );
@@ -142,7 +156,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: 'Bedrooms must be non-negative'
+          error: "Bedrooms must be non-negative",
         },
         { status: 400 }
       );
@@ -152,7 +166,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: 'Bathrooms must be non-negative'
+          error: "Bathrooms must be non-negative",
         },
         { status: 400 }
       );
@@ -162,7 +176,7 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: 'Max guests must be at least 1'
+          error: "Max guests must be at least 1",
         },
         { status: 400 }
       );
@@ -177,19 +191,18 @@ export async function PUT(
 
     return NextResponse.json({
       success: true,
-      data: updatedProperty
+      data: updatedProperty,
     });
-
   } catch (error) {
-    console.error('Error updating property:', error);
-    
+    console.error("Error updating property:", error);
+
     // Handle validation errors
-    if (error instanceof Error && error.name === 'ValidationError') {
+    if (error instanceof Error && error.name === "ValidationError") {
       return NextResponse.json(
         {
           success: false,
-          error: 'Validation error',
-          details: error.message
+          error: "Validation error",
+          details: error.message,
         },
         { status: 400 }
       );
@@ -198,7 +211,7 @@ export async function PUT(
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to update property'
+        error: "Failed to update property",
       },
       { status: 500 }
     );
@@ -220,7 +233,7 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid property ID format'
+          error: "Invalid property ID format",
         },
         { status: 400 }
       );
@@ -228,12 +241,12 @@ export async function DELETE(
 
     // Find the property and check for active bookings
     const property = await Property.findById(id);
-    
+
     if (!property) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Property not found'
+          error: "Property not found",
         },
         { status: 404 }
       );
@@ -241,15 +254,17 @@ export async function DELETE(
 
     // Check if there are any confirmed future bookings
     const now = new Date();
-    const activeFutureBookings = property.bookings.filter((booking: any) => 
-      booking.status === 'confirmed' && new Date(booking.checkOut) > now
+    const activeFutureBookings = property.bookings.filter(
+      (booking: any) =>
+        booking.status === "confirmed" && new Date(booking.checkOut) > now
     );
 
     if (activeFutureBookings.length > 0) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Cannot delete property with active future bookings. Please cancel all bookings first.'
+          error:
+            "Cannot delete property with active future bookings. Please cancel all bookings first.",
         },
         { status: 400 }
       );
@@ -264,16 +279,15 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: 'Property deactivated successfully',
-      data: { id: updatedProperty?._id }
+      message: "Property deactivated successfully",
+      data: { id: updatedProperty?._id },
     });
-
   } catch (error) {
-    console.error('Error deleting property:', error);
+    console.error("Error deleting property:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to delete property'
+        error: "Failed to delete property",
       },
       { status: 500 }
     );

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Property from '@/models/Property';
-import mongoose from 'mongoose';
+import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import Property from "@/models/Property";
+import mongoose from "mongoose";
 
 // GET /api/bookings/[id] - Get a specific booking
 export async function GET(
@@ -18,20 +18,22 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid booking ID format'
+          error: "Invalid booking ID format",
         },
         { status: 400 }
       );
     }
 
     // Find the property that contains this booking
-    const property = await Property.findOne({ 'bookings._id': id }).lean();
+    const property = (await Property.findOne({
+      "bookings._id": id,
+    }).lean()) as any;
 
     if (!property) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Booking not found'
+          error: "Booking not found",
         },
         { status: 404 }
       );
@@ -44,7 +46,7 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: 'Booking not found'
+          error: "Booking not found",
         },
         { status: 404 }
       );
@@ -66,20 +68,19 @@ export async function GET(
       guests: booking.guests,
       totalPrice: booking.totalPrice,
       status: booking.status,
-      createdAt: booking.createdAt
+      createdAt: booking.createdAt,
     };
 
     return NextResponse.json({
       success: true,
-      data: bookingWithProperty
+      data: bookingWithProperty,
     });
-
   } catch (error) {
-    console.error('Error fetching booking:', error);
+    console.error("Error fetching booking:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch booking'
+        error: "Failed to fetch booking",
       },
       { status: 500 }
     );
@@ -103,45 +104,47 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid booking ID format'
+          error: "Invalid booking ID format",
         },
         { status: 400 }
       );
     }
 
     // Validate status
-    const validStatuses = ['pending', 'confirmed', 'cancelled'];
+    const validStatuses = ["pending", "confirmed", "cancelled"];
     if (!status || !validStatuses.includes(status)) {
       return NextResponse.json(
         {
           success: false,
-          error: `Status must be one of: ${validStatuses.join(', ')}`
+          error: `Status must be one of: ${validStatuses.join(", ")}`,
         },
         { status: 400 }
       );
     }
 
     // Find the property that contains this booking
-    const property = await Property.findOne({ 'bookings._id': id });
+    const property = await Property.findOne({ "bookings._id": id });
 
     if (!property) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Booking not found'
+          error: "Booking not found",
         },
         { status: 404 }
       );
     }
 
     // Find the booking index
-    const bookingIndex = property.bookings.findIndex((b: any) => b._id.toString() === id);
+    const bookingIndex = property.bookings.findIndex(
+      (b: any) => b._id.toString() === id
+    );
 
     if (bookingIndex === -1) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Booking not found'
+          error: "Booking not found",
         },
         { status: 404 }
       );
@@ -150,39 +153,41 @@ export async function PATCH(
     const booking = property.bookings[bookingIndex];
 
     // Check if the booking can be updated
-    if (booking.status === 'cancelled' && status !== 'cancelled') {
+    if (booking.status === "cancelled" && status !== "cancelled") {
       return NextResponse.json(
         {
           success: false,
-          error: 'Cannot update a cancelled booking'
+          error: "Cannot update a cancelled booking",
         },
         { status: 400 }
       );
     }
 
     // If confirming a booking, check if dates are still available
-    if (status === 'confirmed' && booking.status !== 'confirmed') {
+    if (status === "confirmed" && booking.status !== "confirmed") {
       // Temporarily remove this booking to check availability
-      const tempBookings = property.bookings.filter((_: any, index: number) => index !== bookingIndex);
+      const tempBookings = property.bookings.filter(
+        (_: any, index: number) => index !== bookingIndex
+      );
       const tempProperty = { ...property.toObject(), bookings: tempBookings };
-      
+
       // Check if the dates are still available (considering other bookings)
       const isAvailable = !tempBookings.some((otherBooking: any) => {
-        if (otherBooking.status === 'cancelled') return false;
-        
+        if (otherBooking.status === "cancelled") return false;
+
         const otherStart = new Date(otherBooking.checkIn);
         const otherEnd = new Date(otherBooking.checkOut);
         const bookingStart = new Date(booking.checkIn);
         const bookingEnd = new Date(booking.checkOut);
-        
-        return (bookingStart < otherEnd && bookingEnd > otherStart);
+
+        return bookingStart < otherEnd && bookingEnd > otherStart;
       });
 
       if (!isAvailable) {
         return NextResponse.json(
           {
             success: false,
-            error: 'Property is no longer available for the selected dates'
+            error: "Property is no longer available for the selected dates",
           },
           { status: 400 }
         );
@@ -192,12 +197,16 @@ export async function PATCH(
     // Check if booking is in the past (can't cancel past bookings that are confirmed)
     const now = new Date();
     const checkInDate = new Date(booking.checkIn);
-    
-    if (status === 'cancelled' && booking.status === 'confirmed' && checkInDate <= now) {
+
+    if (
+      status === "cancelled" &&
+      booking.status === "confirmed" &&
+      checkInDate <= now
+    ) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Cannot cancel a booking that has already started'
+          error: "Cannot cancel a booking that has already started",
         },
         { status: 400 }
       );
@@ -218,16 +227,15 @@ export async function PATCH(
         propertyId: property._id,
         propertyTitle: property.title,
         status: updatedBooking.status,
-        message: `Booking ${status} successfully`
-      }
+        message: `Booking ${status} successfully`,
+      },
     });
-
   } catch (error) {
-    console.error('Error updating booking:', error);
+    console.error("Error updating booking:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to update booking'
+        error: "Failed to update booking",
       },
       { status: 500 }
     );
@@ -249,7 +257,7 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid booking ID format'
+          error: "Invalid booking ID format",
         },
         { status: 400 }
       );
@@ -257,13 +265,13 @@ export async function DELETE(
 
     // Find and update the property to remove the booking
     const property = await Property.findOneAndUpdate(
-      { 
-        'bookings._id': id,
-        'bookings.status': 'pending' // Only allow deletion of pending bookings
+      {
+        "bookings._id": id,
+        "bookings.status": "pending", // Only allow deletion of pending bookings
       },
-      { 
+      {
         $pull: { bookings: { _id: id } },
-        $set: { updatedAt: new Date() }
+        $set: { updatedAt: new Date() },
       },
       { new: true }
     );
@@ -272,7 +280,8 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: 'Booking not found or cannot be deleted (only pending bookings can be deleted)'
+          error:
+            "Booking not found or cannot be deleted (only pending bookings can be deleted)",
         },
         { status: 404 }
       );
@@ -280,16 +289,15 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: 'Booking deleted successfully',
-      data: { id }
+      message: "Booking deleted successfully",
+      data: { id },
     });
-
   } catch (error) {
-    console.error('Error deleting booking:', error);
+    console.error("Error deleting booking:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to delete booking'
+        error: "Failed to delete booking",
       },
       { status: 500 }
     );

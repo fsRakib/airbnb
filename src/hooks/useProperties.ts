@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 interface Property {
   _id: string;
@@ -52,7 +52,7 @@ interface UsePropertiesParams {
   page?: number;
   limit?: number;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: "asc" | "desc";
 }
 
 export function useProperties(params: UsePropertiesParams = {}) {
@@ -64,12 +64,12 @@ export function useProperties(params: UsePropertiesParams = {}) {
 
   const buildQueryString = useCallback((searchParams: UsePropertiesParams) => {
     const query = new URLSearchParams();
-    
+
     Object.entries(searchParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== "") {
         if (Array.isArray(value)) {
           if (value.length > 0) {
-            query.set(key, value.join(','));
+            query.set(key, value.join(","));
           }
         } else {
           query.set(key, value.toString());
@@ -80,39 +80,43 @@ export function useProperties(params: UsePropertiesParams = {}) {
     return query.toString();
   }, []);
 
-  const fetchProperties = useCallback(async (searchParams: UsePropertiesParams, append = false) => {
-    setLoading(true);
-    setError(null);
+  const fetchProperties = useCallback(
+    async (searchParams: UsePropertiesParams, append = false) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const queryString = buildQueryString(searchParams);
-      const response = await fetch(`/api/properties?${queryString}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      try {
+        const queryString = buildQueryString(searchParams);
+        const response = await fetch(`/api/properties?${queryString}`);
 
-      const data: PropertiesResponse = await response.json();
-
-      if (data.success) {
-        if (append) {
-          setProperties(prev => [...prev, ...data.data.properties]);
-        } else {
-          setProperties(data.data.properties);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-        setPagination(data.data.pagination);
-        setHasMore(data.data.pagination.hasNextPage);
-      } else {
-        throw new Error('Failed to fetch properties');
+
+        const data: PropertiesResponse = await response.json();
+
+        if (data.success) {
+          if (append) {
+            setProperties((prev) => [...prev, ...data.data.properties]);
+          } else {
+            setProperties(data.data.properties);
+          }
+          setPagination(data.data.pagination);
+          setHasMore(data.data.pagination.hasNextPage);
+        } else {
+          throw new Error("Failed to fetch properties");
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "An error occurred";
+        setError(errorMessage);
+        console.error("Error fetching properties:", err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
-      setError(errorMessage);
-      console.error('Error fetching properties:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [buildQueryString]);
+    },
+    [buildQueryString]
+  );
 
   const loadMore = useCallback(() => {
     if (pagination && pagination.hasNextPage && !loading) {
@@ -137,7 +141,7 @@ export function useProperties(params: UsePropertiesParams = {}) {
     error,
     hasMore,
     loadMore,
-    refresh
+    refresh,
   };
 }
 
@@ -146,28 +150,35 @@ export function usePropertySearch() {
   const [searchParams, setSearchParams] = useState<UsePropertiesParams>({
     page: 1,
     limit: 12,
-    sortBy: 'createdAt',
-    sortOrder: 'desc'
+    sortBy: "createdAt",
+    sortOrder: "desc",
   });
 
-  const { properties, pagination, loading, error, hasMore, loadMore, refresh } = useProperties(searchParams);
+  const { properties, pagination, loading, error, hasMore, loadMore, refresh } =
+    useProperties(searchParams);
 
-  const updateSearch = useCallback((newParams: Partial<UsePropertiesParams>) => {
-    setSearchParams(prev => ({
-      ...prev,
-      ...newParams,
-      page: 1 // Reset to first page when search params change
-    }));
-  }, []);
+  const updateSearch = useCallback(
+    (newParams: Partial<UsePropertiesParams>) => {
+      setSearchParams((prev) => ({
+        ...prev,
+        ...newParams,
+        page: 1, // Reset to first page when search params change
+      }));
+    },
+    []
+  );
 
-  const updateFilters = useCallback((filters: {
-    propertyType?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    amenities?: string[];
-  }) => {
-    updateSearch(filters);
-  }, [updateSearch]);
+  const updateFilters = useCallback(
+    (filters: {
+      propertyType?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      amenities?: string[];
+    }) => {
+      updateSearch(filters);
+    },
+    [updateSearch]
+  );
 
   return {
     properties,
@@ -179,6 +190,6 @@ export function usePropertySearch() {
     updateSearch,
     updateFilters,
     loadMore,
-    refresh
+    refresh,
   };
 }

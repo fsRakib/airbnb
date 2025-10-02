@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import Property from '@/models/Property';
-import mongoose from 'mongoose';
+import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import Property from "@/models/Property";
+import mongoose from "mongoose";
 
 // POST /api/bookings - Create a new booking
 export async function POST(request: NextRequest) {
@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: propertyId, guestId, checkIn, checkOut, guests'
+          error:
+            "Missing required fields: propertyId, guestId, checkIn, checkOut, guests",
         },
         { status: 400 }
       );
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid property ID format'
+          error: "Invalid property ID format",
         },
         { status: 400 }
       );
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Invalid date format'
+          error: "Invalid date format",
         },
         { status: 400 }
       );
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Check-out date must be after check-in date'
+          error: "Check-out date must be after check-in date",
         },
         { status: 400 }
       );
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Check-in date must be in the future'
+          error: "Check-in date must be in the future",
         },
         { status: 400 }
       );
@@ -73,7 +74,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Number of guests must be at least 1'
+          error: "Number of guests must be at least 1",
         },
         { status: 400 }
       );
@@ -86,7 +87,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Property not found'
+          error: "Property not found",
         },
         { status: 404 }
       );
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Property is not available for booking'
+          error: "Property is not available for booking",
         },
         { status: 400 }
       );
@@ -107,7 +108,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: `Property can accommodate maximum ${property.maxGuests} guests`
+          error: `Property can accommodate maximum ${property.maxGuests} guests`,
         },
         { status: 400 }
       );
@@ -118,14 +119,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Property is not available for the selected dates'
+          error: "Property is not available for the selected dates",
         },
         { status: 400 }
       );
     }
 
     // Calculate total price
-    const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+    const nights = Math.ceil(
+      (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
     const totalPrice = nights * property.pricePerNight;
 
     // Create the booking object
@@ -135,7 +138,7 @@ export async function POST(request: NextRequest) {
       checkOut: checkOutDate,
       guests,
       totalPrice,
-      status: 'pending'
+      status: "pending",
     };
 
     // Add booking to the property
@@ -145,34 +148,36 @@ export async function POST(request: NextRequest) {
     // Get the created booking (last item in the array)
     const createdBooking = property.bookings[property.bookings.length - 1];
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        bookingId: createdBooking._id,
-        propertyId: property._id,
-        propertyTitle: property.title,
-        guestId,
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
-        guests,
-        nights,
-        pricePerNight: property.pricePerNight,
-        totalPrice,
-        status: 'pending',
-        createdAt: createdBooking.createdAt
-      }
-    }, { status: 201 });
-
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          bookingId: createdBooking._id,
+          propertyId: property._id,
+          propertyTitle: property.title,
+          guestId,
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
+          guests,
+          nights,
+          pricePerNight: property.pricePerNight,
+          totalPrice,
+          status: "pending",
+          createdAt: createdBooking.createdAt,
+        },
+      },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error('Error creating booking:', error);
-    
+    console.error("Error creating booking:", error);
+
     // Handle validation errors
-    if (error instanceof Error && error.name === 'ValidationError') {
+    if (error instanceof Error && error.name === "ValidationError") {
       return NextResponse.json(
         {
           success: false,
-          error: 'Validation error',
-          details: error.message
+          error: "Validation error",
+          details: error.message,
         },
         { status: 400 }
       );
@@ -181,7 +186,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to create booking'
+        error: "Failed to create booking",
       },
       { status: 500 }
     );
@@ -194,81 +199,81 @@ export async function GET(request: NextRequest) {
     await connectDB();
 
     const { searchParams } = new URL(request.url);
-    
-    const guestId = searchParams.get('guestId');
-    const hostId = searchParams.get('hostId');
-    const status = searchParams.get('status');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+
+    const guestId = searchParams.get("guestId");
+    const hostId = searchParams.get("hostId");
+    const status = searchParams.get("status");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
     const skip = (page - 1) * limit;
 
     let matchStage: any = {};
 
     // Build match conditions
     if (guestId) {
-      matchStage['bookings.guestId'] = guestId;
+      matchStage["bookings.guestId"] = guestId;
     }
 
     if (hostId) {
-      matchStage['hostId'] = hostId;
+      matchStage["hostId"] = hostId;
     }
 
     if (status) {
-      matchStage['bookings.status'] = status;
+      matchStage["bookings.status"] = status;
     }
 
     // Aggregate to get bookings with property details
     const pipeline = [
       // Match properties that have bookings matching our criteria
       { $match: matchStage },
-      
+
       // Unwind bookings array
-      { $unwind: '$bookings' },
-      
+      { $unwind: "$bookings" },
+
       // Match specific booking criteria after unwinding
       {
         $match: {
-          ...(guestId && { 'bookings.guestId': guestId }),
-          ...(status && { 'bookings.status': status })
-        }
+          ...(guestId && { "bookings.guestId": guestId }),
+          ...(status && { "bookings.status": status }),
+        },
       },
-      
+
       // Project the fields we want
       {
         $project: {
-          bookingId: '$bookings._id',
-          propertyId: '$_id',
-          propertyTitle: '$title',
-          propertyImages: { $slice: ['$images', 1] }, // Just first image
-          location: '$location',
-          hostId: '$hostId',
-          hostName: '$hostName',
-          guestId: '$bookings.guestId',
-          checkIn: '$bookings.checkIn',
-          checkOut: '$bookings.checkOut',
-          guests: '$bookings.guests',
-          totalPrice: '$bookings.totalPrice',
-          status: '$bookings.status',
-          createdAt: '$bookings.createdAt'
-        }
+          bookingId: "$bookings._id",
+          propertyId: "$_id",
+          propertyTitle: "$title",
+          propertyImages: { $slice: ["$images", 1] }, // Just first image
+          location: "$location",
+          hostId: "$hostId",
+          hostName: "$hostName",
+          guestId: "$bookings.guestId",
+          checkIn: "$bookings.checkIn",
+          checkOut: "$bookings.checkOut",
+          guests: "$bookings.guests",
+          totalPrice: "$bookings.totalPrice",
+          status: "$bookings.status",
+          createdAt: "$bookings.createdAt",
+        },
       },
-      
+
       // Sort by creation date (newest first)
       { $sort: { createdAt: -1 } },
-      
+
       // Pagination
       { $skip: skip },
-      { $limit: limit }
+      { $limit: limit },
     ];
 
-    const bookings = await Property.aggregate(pipeline);
+    const bookings = await Property.aggregate(pipeline as any[]);
 
     // Get total count for pagination
     const totalPipeline = pipeline.slice(0, -2); // Remove skip and limit
     const totalBookings = await Property.aggregate([
       ...totalPipeline,
-      { $count: 'total' }
-    ]);
+      { $count: "total" },
+    ] as any[]);
 
     const total = totalBookings[0]?.total || 0;
     const totalPages = Math.ceil(total / limit);
@@ -283,17 +288,16 @@ export async function GET(request: NextRequest) {
           totalBookings: total,
           hasNextPage: page < totalPages,
           hasPrevPage: page > 1,
-          limit
-        }
-      }
+          limit,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Error fetching bookings:', error);
+    console.error("Error fetching bookings:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch bookings'
+        error: "Failed to fetch bookings",
       },
       { status: 500 }
     );
