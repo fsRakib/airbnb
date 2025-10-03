@@ -12,6 +12,7 @@ import AmenitiesSection from "@/components/AmenitiesSection";
 import ReviewsSection from "@/components/ReviewsSection";
 import BookingWidget from "@/components/BookingWidget";
 import PropertyMap from "@/components/PropertyMap";
+import SleepingArrangements from "@/components/SleepingArrangements";
 
 interface PropertyPageProps {
   params: { id: string };
@@ -95,6 +96,85 @@ export default function PropertyPage() {
           <ImageGallery images={property.images} title={property.title} />
         </div>
 
+        {/* Property Title and Actions */}
+        <div className="px-4 sm:px-6 lg:px-8 mb-6">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 mb-2 leading-tight">
+                {property.title}
+              </h1>
+              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                {property.rating > 0 && (
+                  <>
+                    <div className="flex items-center">
+                      <svg
+                        className="w-4 h-4 text-yellow-400 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                      <span className="font-medium text-gray-900">
+                        {property.rating.toFixed(1)}
+                      </span>
+                    </div>
+                    <span>•</span>
+                  </>
+                )}
+                {property.reviewCount > 0 && (
+                  <>
+                    <button className="hover:underline font-medium text-gray-900">
+                      {property.reviewCount.toLocaleString()} review
+                      {property.reviewCount !== 1 ? "s" : ""}
+                    </button>
+                    <span>•</span>
+                  </>
+                )}
+                <span className="font-medium text-gray-900">
+                  {property.location.city}, {property.location.state},{" "}
+                  {property.location.country}
+                </span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                  />
+                </svg>
+                Share
+              </button>
+              <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content Grid */}
         <div className="px-4 sm:px-6 lg:px-8 grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8 xl:gap-12">
           {/* Left Column - Property Details */}
@@ -109,6 +189,13 @@ export default function PropertyPage() {
 
             {/* Amenities */}
             <AmenitiesSection amenities={property.amenities || []} />
+
+            {/* Sleeping Arrangements */}
+            <SleepingArrangements
+              bedrooms={property.bedrooms}
+              beds={property.bedrooms + 1}
+              bathrooms={property.bathrooms}
+            />
 
             {/* Description */}
             <section className="border-b border-gray-200 pb-6 sm:pb-8">

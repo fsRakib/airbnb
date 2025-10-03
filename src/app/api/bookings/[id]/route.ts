@@ -6,12 +6,12 @@ import mongoose from "mongoose";
 // GET /api/bookings/[id] - Get a specific booking
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     // Validate MongoDB ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -90,12 +90,12 @@ export async function GET(
 // PATCH /api/bookings/[id] - Update booking status (confirm, cancel)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { status, updatedBy } = body;
 
@@ -245,12 +245,12 @@ export async function PATCH(
 // DELETE /api/bookings/[id] - Delete a booking (only if pending)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     // Validate MongoDB ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {

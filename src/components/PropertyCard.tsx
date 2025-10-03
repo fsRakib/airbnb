@@ -484,10 +484,10 @@ export function PropertyGridError({
 }
 
 // Empty state component for no results
-export function PropertyGridEmpty({ 
+export function PropertyGridEmpty({
   title = "No stays found",
   message = "Try adjusting your search or filters to find what you're looking for.",
-  actionButton
+  actionButton,
 }: {
   title?: string;
   message?: string;
@@ -496,7 +496,9 @@ export function PropertyGridEmpty({
   return (
     <div className="text-center py-12 sm:py-16 lg:py-20 px-4">
       <div className="max-w-md mx-auto animate-[fadeIn_0.6s_ease-out]">
-        <div className="text-6xl sm:text-7xl lg:text-8xl mb-4 sm:mb-6 opacity-60">🏠</div>
+        <div className="text-6xl sm:text-7xl lg:text-8xl mb-4 sm:mb-6 opacity-60">
+          🏠
+        </div>
         <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">
           {title}
         </h3>
@@ -506,7 +508,7 @@ export function PropertyGridEmpty({
         <div className="space-y-3 sm:space-y-4">
           {actionButton || (
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => (window.location.href = "/")}
               className="bg-gray-900 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-gray-800 transition-all duration-200 text-sm sm:text-base font-medium hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
             >
               Clear filters

@@ -6,12 +6,12 @@ import mongoose from "mongoose";
 // GET /api/properties/[id] - Fetch a single property by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     // Validate MongoDB ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -77,12 +77,12 @@ export async function GET(
 // PUT /api/properties/[id] - Update a property (for hosts)
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
 
     // Validate MongoDB ObjectId format

@@ -123,348 +123,356 @@ export default function BookingWidget({
 
   return (
     <div className="xl:sticky xl:top-8">
-      <div className="border border-gray-300 rounded-xl shadow-lg bg-white">
+      <div className="border border-gray-300 rounded-xl shadow-xl bg-white overflow-hidden">
         {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-baseline space-x-1">
-              <span className="text-xl sm:text-2xl font-semibold text-gray-900">
-                ${pricePerNight}
+              <span className="text-2xl font-semibold text-gray-900">
+                ${pricePerNight.toLocaleString()}
               </span>
-              <span className="text-sm sm:text-base text-gray-600">night</span>
+              <span className="text-base text-gray-600 font-normal">night</span>
             </div>
-            <div className="flex items-center space-x-1">
-              <svg
-                className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-              <span className="font-medium text-gray-900 text-sm sm:text-base">
-                {rating.toFixed(1)}
-              </span>
-              <span className="text-gray-600 text-sm sm:text-base">
-                ({reviewCount.toLocaleString()})
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Booking Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="p-4 sm:p-6 space-y-3 sm:space-y-4"
-        >
-          {/* Date Inputs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 border border-gray-300 rounded-lg overflow-hidden">
-            <div className="sm:border-r border-gray-300 border-b sm:border-b-0">
-              <label className="block text-xs font-medium text-gray-700 p-2 sm:p-3 pb-1">
-                CHECK-IN
-              </label>
-              <input
-                type="date"
-                value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
-                min={today}
-                className="w-full px-2 sm:px-3 pb-2 sm:pb-3 text-sm border-none focus:outline-none focus:ring-0"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-700 p-2 sm:p-3 pb-1">
-                CHECKOUT
-              </label>
-              <input
-                type="date"
-                value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
-                min={checkIn || today}
-                className="w-full px-2 sm:px-3 pb-2 sm:pb-3 text-sm border-none focus:outline-none focus:ring-0"
-                required
-              />
-            </div>
+            {rating > 0 && (
+              <div className="flex items-center space-x-1 text-sm">
+                <svg
+                  className="w-4 h-4 text-yellow-400"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span className="font-medium text-gray-900">
+                  {rating.toFixed(1)}
+                </span>
+                {reviewCount > 0 && (
+                  <>
+                    <span className="text-gray-400 mx-1">•</span>
+                    <button className="text-gray-600 hover:underline font-medium">
+                      {reviewCount.toLocaleString()} review
+                      {reviewCount !== 1 ? "s" : ""}
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Guests Picker */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowGuestPicker(!showGuestPicker)}
-              className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-left hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1"
-            >
-              <label className="block text-xs font-medium text-gray-700 mb-1">
-                GUESTS
-              </label>
-              <span className="text-sm text-gray-900">
-                {guests} guest{guests !== 1 ? "s" : ""}
-              </span>
-              <svg
-                className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
+          {/* Booking Form */}
+          <form
+            onSubmit={handleSubmit}
+            className="p-4 sm:p-6 space-y-3 sm:space-y-4"
+          >
+            {/* Date Inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 border border-gray-300 rounded-lg overflow-hidden">
+              <div className="sm:border-r border-gray-300 border-b sm:border-b-0">
+                <label className="block text-xs font-medium text-gray-700 p-2 sm:p-3 pb-1">
+                  CHECK-IN
+                </label>
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  min={today}
+                  className="w-full px-2 sm:px-3 pb-2 sm:pb-3 text-sm border-none focus:outline-none focus:ring-0"
+                  required
                 />
-              </svg>
-            </button>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 p-2 sm:p-3 pb-1">
+                  CHECKOUT
+                </label>
+                <input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn || today}
+                  className="w-full px-2 sm:px-3 pb-2 sm:pb-3 text-sm border-none focus:outline-none focus:ring-0"
+                  required
+                />
+              </div>
+            </div>
 
-            {showGuestPicker && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 space-y-4">
-                {/* Adults */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium text-gray-900">Adults</div>
-                    <div className="text-sm text-gray-600">
-                      Ages 13 or above
+            {/* Guests Picker */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowGuestPicker(!showGuestPicker)}
+                className="w-full border border-gray-300 rounded-lg p-2 sm:p-3 text-left hover:border-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1"
+              >
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  GUESTS
+                </label>
+                <span className="text-sm text-gray-900">
+                  {guests} guest{guests !== 1 ? "s" : ""}
+                </span>
+                <svg
+                  className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              {showGuestPicker && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 p-4 space-y-4">
+                  {/* Adults */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-gray-900">Adults</div>
+                      <div className="text-sm text-gray-600">
+                        Ages 13 or above
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount("adults", false)}
+                        disabled={guestCounts.adults <= 1}
+                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M20 12H4"
+                          />
+                        </svg>
+                      </button>
+                      <span className="w-8 text-center font-medium">
+                        {guestCounts.adults}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount("adults", true)}
+                        disabled={
+                          guestCounts.adults + guestCounts.children >= maxGuests
+                        }
+                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount("adults", false)}
-                      disabled={guestCounts.adults <= 1}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 12H4"
-                        />
-                      </svg>
-                    </button>
-                    <span className="w-8 text-center font-medium">
-                      {guestCounts.adults}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount("adults", true)}
-                      disabled={
-                        guestCounts.adults + guestCounts.children >= maxGuests
-                      }
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
 
-                {/* Children */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium text-gray-900">Children</div>
-                    <div className="text-sm text-gray-600">Ages 2-12</div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount("children", false)}
-                      disabled={guestCounts.children <= 0}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                  {/* Children */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-gray-900">Children</div>
+                      <div className="text-sm text-gray-600">Ages 2-12</div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount("children", false)}
+                        disabled={guestCounts.children <= 0}
+                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 12H4"
-                        />
-                      </svg>
-                    </button>
-                    <span className="w-8 text-center font-medium">
-                      {guestCounts.children}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount("children", true)}
-                      disabled={
-                        guestCounts.adults + guestCounts.children >= maxGuests
-                      }
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M20 12H4"
+                          />
+                        </svg>
+                      </button>
+                      <span className="w-8 text-center font-medium">
+                        {guestCounts.children}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount("children", true)}
+                        disabled={
+                          guestCounts.adults + guestCounts.children >= maxGuests
+                        }
+                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Infants */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium text-gray-900">Infants</div>
-                    <div className="text-sm text-gray-600">Under 2</div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount("infants", false)}
-                      disabled={guestCounts.infants <= 0}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                  {/* Infants */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-gray-900">Infants</div>
+                      <div className="text-sm text-gray-600">Under 2</div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount("infants", false)}
+                        disabled={guestCounts.infants <= 0}
+                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-gray-400"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 12H4"
-                        />
-                      </svg>
-                    </button>
-                    <span className="w-8 text-center font-medium">
-                      {guestCounts.infants}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount("infants", true)}
-                      className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M20 12H4"
+                          />
+                        </svg>
+                      </button>
+                      <span className="w-8 text-center font-medium">
+                        {guestCounts.infants}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount("infants", true)}
+                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 4v16m8-8H4"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v16m8-8H4"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowGuestPicker(false)}
-                  className="w-full py-2 text-sm font-medium text-gray-900 hover:text-gray-700"
-                >
-                  Close
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowGuestPicker(false)}
+                    className="w-full py-2 text-sm font-medium text-gray-900 hover:text-gray-700"
+                  >
+                    Close
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Reserve Button */}
+            <button
+              type="submit"
+              disabled={!canBook || isLoading}
+              className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-pink-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Processing...</span>
+                </div>
+              ) : (
+                "Reserve"
+              )}
+            </button>
+
+            {/* Price Breakdown */}
+            {nights > 0 && (
+              <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t border-gray-200">
+                <div className="flex justify-between text-gray-900 text-sm sm:text-base">
+                  <span>
+                    ${pricePerNight} × {nights} night{nights !== 1 ? "s" : ""}
+                  </span>
+                  <span>${subtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-gray-900 text-sm sm:text-base">
+                  <span>Cleaning fee</span>
+                  <span>${cleaningFee.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-gray-900 text-sm sm:text-base">
+                  <span>Service fee</span>
+                  <span>${serviceFee.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-gray-900 text-sm sm:text-base">
+                  <span>Taxes</span>
+                  <span>${taxes.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-base sm:text-lg font-semibold text-gray-900 pt-2 sm:pt-3 border-t border-gray-200">
+                  <span>Total</span>
+                  <span>${totalPrice.toLocaleString()}</span>
+                </div>
               </div>
             )}
-          </div>
 
-          {/* Reserve Button */}
-          <button
-            type="submit"
-            disabled={!canBook || isLoading}
-            className="w-full bg-gradient-to-r from-pink-500 to-red-500 text-white font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-pink-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 hover:scale-[1.02] active:scale-[0.98]"
-          >
-            {isLoading ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Processing...</span>
-              </div>
-            ) : (
-              "Reserve"
-            )}
-          </button>
+            {/* Disclaimer */}
+            <p className="text-xs text-gray-600 text-center pt-2 leading-relaxed">
+              You won't be charged yet
+            </p>
+          </form>
+        </div>
 
-          {/* Price Breakdown */}
-          {nights > 0 && (
-            <div className="space-y-2 sm:space-y-3 pt-3 sm:pt-4 border-t border-gray-200">
-              <div className="flex justify-between text-gray-900 text-sm sm:text-base">
-                <span>
-                  ${pricePerNight} × {nights} night{nights !== 1 ? "s" : ""}
+        {/* Mobile Booking Bar - Show on small screens when widget is in main content */}
+        <div className="xl:hidden fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white p-3 sm:p-4 z-50 shadow-lg">
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
+            <div>
+              <div className="flex items-baseline space-x-1">
+                <span className="text-base sm:text-lg font-semibold text-gray-900">
+                  ${pricePerNight}
                 </span>
-                <span>${subtotal.toLocaleString()}</span>
+                <span className="text-gray-600 text-xs sm:text-sm">night</span>
               </div>
-              <div className="flex justify-between text-gray-900 text-sm sm:text-base">
-                <span>Cleaning fee</span>
-                <span>${cleaningFee.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-900 text-sm sm:text-base">
-                <span>Service fee</span>
-                <span>${serviceFee.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-gray-900 text-sm sm:text-base">
-                <span>Taxes</span>
-                <span>${taxes.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-base sm:text-lg font-semibold text-gray-900 pt-2 sm:pt-3 border-t border-gray-200">
-                <span>Total</span>
-                <span>${totalPrice.toLocaleString()}</span>
-              </div>
+              {totalPrice > 0 && (
+                <div className="text-xs sm:text-sm text-gray-600">
+                  ${totalPrice.toLocaleString()} total
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Disclaimer */}
-          <p className="text-xs text-gray-600 text-center pt-2 leading-relaxed">
-            You won't be charged yet
-          </p>
-        </form>
-      </div>
-
-      {/* Mobile Booking Bar - Show on small screens when widget is in main content */}
-      <div className="xl:hidden fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white p-3 sm:p-4 z-50 shadow-lg">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div>
-            <div className="flex items-baseline space-x-1">
-              <span className="text-base sm:text-lg font-semibold text-gray-900">
-                ${pricePerNight}
-              </span>
-              <span className="text-gray-600 text-xs sm:text-sm">night</span>
-            </div>
-            {totalPrice > 0 && (
-              <div className="text-xs sm:text-sm text-gray-600">
-                ${totalPrice.toLocaleString()} total
-              </div>
-            )}
+            <button
+              onClick={handleSubmit}
+              disabled={!canBook || isLoading}
+              className="bg-gradient-to-r from-pink-500 to-red-500 text-white font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-pink-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {isLoading ? "Processing..." : "Reserve"}
+            </button>
           </div>
-          <button
-            onClick={handleSubmit}
-            disabled={!canBook || isLoading}
-            className="bg-gradient-to-r from-pink-500 to-red-500 text-white font-semibold py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg hover:from-pink-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 hover:scale-[1.02] active:scale-[0.98]"
-          >
-            {isLoading ? "Processing..." : "Reserve"}
-          </button>
         </div>
       </div>
     </div>
