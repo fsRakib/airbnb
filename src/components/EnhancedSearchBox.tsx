@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 interface SearchBoxProps {
-  onSearch?: (data: any) => void;
+  onSearch?: (data: unknown) => void;
 }
 
 export default function EnhancedSearchBox({ onSearch }: SearchBoxProps) {
@@ -224,7 +224,6 @@ export default function EnhancedSearchBox({ onSearch }: SearchBoxProps) {
     onClose: () => void;
   }) => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [isSelectingCheckOut, setIsSelectingCheckOut] = useState(false);
 
     const monthNames = [
       "January",
@@ -245,7 +244,6 @@ export default function EnhancedSearchBox({ onSearch }: SearchBoxProps) {
       const year = date.getFullYear();
       const month = date.getMonth();
       const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
       const startDate = new Date(firstDay);
       startDate.setDate(startDate.getDate() - firstDay.getDay()); // Start from Sunday
 
@@ -286,16 +284,13 @@ export default function EnhancedSearchBox({ onSearch }: SearchBoxProps) {
       if (!checkIn || (checkIn && checkOut)) {
         // Start new selection
         onDateChange(dateStr, "");
-        setIsSelectingCheckOut(true);
       } else if (checkIn && !checkOut) {
         // Set checkout date
         if (dateStr > checkIn) {
           onDateChange(checkIn, dateStr);
-          setIsSelectingCheckOut(false);
         } else {
           // If earlier date selected, make it check-in
           onDateChange(dateStr, "");
-          setIsSelectingCheckOut(true);
         }
       }
     };

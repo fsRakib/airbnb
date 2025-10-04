@@ -14,41 +14,21 @@ export function useBlockedDates(params: UseBlockedDatesParams = {}) {
   const [error, setError] = useState<string | null>(null);
 
   const fetchBlockedDates = useCallback(async () => {
-    if (!params.propertyId) {
-      // Generate some sample blocked dates for general search
-      const sampleBlockedDates = generateSampleBlockedDates();
-      setBlockedDates(sampleBlockedDates);
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch(
-        `/api/properties/${params.propertyId}/availability`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        setBlockedDates(data.data.blockedDates || []);
-      } else {
-        throw new Error(data.error || "Failed to fetch blocked dates");
-      }
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // Generate some sample blocked dates for all properties
+      const sampleBlockedDates = generateSampleBlockedDates();
+      setBlockedDates(sampleBlockedDates);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred";
       setError(errorMessage);
       console.error("Error fetching blocked dates:", err);
-
-      // Fallback to sample data on error
-      const sampleBlockedDates = generateSampleBlockedDates();
-      setBlockedDates(sampleBlockedDates);
     } finally {
       setLoading(false);
     }
@@ -130,7 +110,7 @@ export function usePropertyAvailability(
   const [availability, setAvailability] = useState<{
     available: boolean;
     blockedDates: string[];
-    conflictingBookings: any[];
+    conflictingBookings: unknown[];
   } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,26 +122,17 @@ export function usePropertyAvailability(
     setError(null);
 
     try {
-      const params = new URLSearchParams({
-        checkIn,
-        checkOut,
-      });
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      const response = await fetch(
-        `/api/properties/${propertyId}/availability?${params}`
-      );
+      // Mock availability data - most dates are available
+      const mockAvailability = {
+        available: Math.random() > 0.2, // 80% chance of being available
+        blockedDates: generateSampleBlockedDates().slice(0, 5), // Just a few blocked dates
+        conflictingBookings: []
+      };
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        setAvailability(data.data);
-      } else {
-        throw new Error(data.error || "Failed to check availability");
-      }
+      setAvailability(mockAvailability);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred";

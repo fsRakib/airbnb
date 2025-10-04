@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import Image from "next/image";
+
 import Link from "next/link";
 import Header from "@/components/Header";
 import { Property } from "@/components/PropertyCard";
@@ -14,10 +14,6 @@ import BookingWidget from "@/components/BookingWidget";
 import PropertyMap from "@/components/PropertyMap";
 import SleepingArrangements from "@/components/SleepingArrangements";
 
-interface PropertyPageProps {
-  params: { id: string };
-}
-
 export default function PropertyPage() {
   const params = useParams();
   const propertyId = params?.id as string;
@@ -26,25 +22,48 @@ export default function PropertyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch property data
+  // Fetch property data (using mock data)
   useEffect(() => {
     const fetchProperty = async () => {
       if (!propertyId) return;
 
       try {
         setLoading(true);
-        const response = await fetch(`/api/properties/${propertyId}`);
+        
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        if (!response.ok) {
-          throw new Error("Property not found");
-        }
+        // Mock property data based on ID
+        const mockProperty: Property = {
+          _id: propertyId,
+          title: `Beautiful Property ${propertyId}`,
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          images: [
+            "/placeholder-property.svg",
+            "/placeholder-property.svg",
+            "/placeholder-property.svg",
+            "/placeholder-property.svg",
+            "/placeholder-property.svg"
+          ],
+          pricePerNight: 180 + Math.floor(Math.random() * 200),
+          location: {
+            city: "San Francisco",
+            state: "CA",
+            country: "USA",
+            address: "123 Main Street"
+          },
+          hostName: "John Doe",
+          hostAvatar: "/placeholder-property.svg",
+          amenities: ["WiFi", "Kitchen", "Parking", "Pool", "Air conditioning", "Heating"],
+          bedrooms: 2 + Math.floor(Math.random() * 3),
+          bathrooms: 1 + Math.floor(Math.random() * 2),
+          maxGuests: 4 + Math.floor(Math.random() * 4),
+          propertyType: "apartment",
+          rating: 4.5 + Math.random() * 0.5,
+          reviewCount: 20 + Math.floor(Math.random() * 100)
+        };
 
-        const data = await response.json();
-        if (data.success) {
-          setProperty(data.data);
-        } else {
-          throw new Error(data.error || "Failed to fetch property");
-        }
+        setProperty(mockProperty);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -310,7 +329,7 @@ function PropertyPageSkeleton() {
                 <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200 animate-[shimmer_2s_infinite]"></div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                {[...Array(8)].map((_, i) => (
+                {[...Array(8)].map((_: unknown, i) => (
                   <div
                     key={i}
                     className="h-10 sm:h-12 bg-gray-200 rounded relative overflow-hidden"
@@ -330,7 +349,7 @@ function PropertyPageSkeleton() {
                 <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200 animate-[shimmer_2s_infinite]"></div>
               </div>
               <div className="space-y-2 sm:space-y-3">
-                {[...Array(4)].map((_, i) => (
+                {[...Array(4)].map((_: unknown, i) => (
                   <div
                     key={i}
                     className="h-4 bg-gray-200 rounded relative overflow-hidden"
@@ -351,7 +370,7 @@ function PropertyPageSkeleton() {
                 <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200 animate-[shimmer_2s_infinite]"></div>
               </div>
               <div className="space-y-4 sm:space-y-6">
-                {[...Array(3)].map((_, i) => (
+                {[...Array(3)].map((_: unknown, i) => (
                   <div key={i} className="space-y-2 sm:space-y-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded-full relative overflow-hidden">
@@ -387,7 +406,7 @@ function PropertyPageSkeleton() {
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200 animate-[shimmer_2s_infinite]"></div>
                 </div>
                 <div className="space-y-3 sm:space-y-4">
-                  {[...Array(4)].map((_, i) => (
+                  {[...Array(4)].map((_: unknown, i) => (
                     <div
                       key={i}
                       className="h-12 sm:h-14 bg-gray-200 rounded-lg relative overflow-hidden"

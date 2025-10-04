@@ -288,7 +288,7 @@ export default function GuestSelector({
                     Pet Policy
                   </p>
                   <p className="text-xs text-blue-700 mt-1">
-                    Make sure to check the property's pet policy and any
+                    Make sure to check the property&apos;s pet policy and any
                     additional fees.
                   </p>
                 </div>

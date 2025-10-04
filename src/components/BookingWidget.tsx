@@ -444,7 +444,7 @@ export default function BookingWidget({
 
             {/* Disclaimer */}
             <p className="text-xs text-gray-600 text-center pt-2 leading-relaxed">
-              You won't be charged yet
+              You won&apos;t be charged yet
             </p>
           </form>
         </div>

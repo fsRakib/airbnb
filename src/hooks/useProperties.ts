@@ -36,7 +36,7 @@ interface PropertiesResponse {
   data: {
     properties: Property[];
     pagination: Pagination;
-    filters: Record<string, any>;
+    filters: Record<string, unknown>;
   };
 }
 
@@ -86,26 +86,122 @@ export function useProperties(params: UsePropertiesParams = {}) {
       setError(null);
 
       try {
-        const queryString = buildQueryString(searchParams);
-        const response = await fetch(`/api/properties?${queryString}`);
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data: PropertiesResponse = await response.json();
-
-        if (data.success) {
-          if (append) {
-            setProperties((prev) => [...prev, ...data.data.properties]);
-          } else {
-            setProperties(data.data.properties);
+        // Mock properties data
+        const mockProperties: Property[] = [
+          {
+            _id: "1",
+            title: "Luxury Apartment in Manhattan",
+            description: "Beautiful luxury apartment with stunning city views in the heart of Manhattan.",
+            images: [
+              "/placeholder-property.svg",
+              "/placeholder-property.svg",
+              "/placeholder-property.svg"
+            ],
+            pricePerNight: 250,
+            location: {
+              city: "New York",
+              state: "NY",
+              country: "USA"
+            },
+            hostName: "Sarah Johnson",
+            bedrooms: 2,
+            bathrooms: 2,
+            maxGuests: 4,
+            propertyType: "apartment",
+            rating: 4.8,
+            reviewCount: 124
+          },
+          {
+            _id: "2",
+            title: "Cozy Beach House",
+            description: "Charming beach house just steps from the ocean with private deck.",
+            images: [
+              "/placeholder-property.svg",
+              "/placeholder-property.svg",
+              "/placeholder-property.svg"
+            ],
+            pricePerNight: 180,
+            location: {
+              city: "Malibu",
+              state: "CA",
+              country: "USA"
+            },
+            hostName: "Mike Chen",
+            bedrooms: 3,
+            bathrooms: 2,
+            maxGuests: 6,
+            propertyType: "house",
+            rating: 4.9,
+            reviewCount: 89
+          },
+          {
+            _id: "3",
+            title: "Modern Downtown Loft",
+            description: "Stylish loft in the heart of downtown with exposed brick and modern amenities.",
+            images: [
+              "/placeholder-property.svg",
+              "/placeholder-property.svg",
+              "/placeholder-property.svg"
+            ],
+            pricePerNight: 200,
+            location: {
+              city: "Chicago",
+              state: "IL",
+              country: "USA"
+            },
+            hostName: "Emily Davis",
+            bedrooms: 1,
+            bathrooms: 1,
+            maxGuests: 2,
+            propertyType: "loft",
+            rating: 4.7,
+            reviewCount: 56
+          },
+          {
+            _id: "4",
+            title: "Mountain Cabin Retreat",
+            description: "Peaceful cabin surrounded by nature with mountain views and fireplace.",
+            images: [
+              "/placeholder-property.svg",
+              "/placeholder-property.svg",
+              "/placeholder-property.svg"
+            ],
+            pricePerNight: 150,
+            location: {
+              city: "Aspen",
+              state: "CO",
+              country: "USA"
+            },
+            hostName: "David Wilson",
+            bedrooms: 2,
+            bathrooms: 1,
+            maxGuests: 4,
+            propertyType: "cabin",
+            rating: 4.6,
+            reviewCount: 42
           }
-          setPagination(data.data.pagination);
-          setHasMore(data.data.pagination.hasNextPage);
+        ];
+
+        // Mock pagination
+        const mockPagination: Pagination = {
+          currentPage: searchParams.page || 1,
+          totalPages: 3,
+          totalProperties: 12,
+          hasNextPage: (searchParams.page || 1) < 3,
+          hasPrevPage: (searchParams.page || 1) > 1,
+          limit: searchParams.limit || 12
+        };
+
+        if (append) {
+          setProperties((prev) => [...prev, ...mockProperties]);
         } else {
-          throw new Error("Failed to fetch properties");
+          setProperties(mockProperties);
         }
+        setPagination(mockPagination);
+        setHasMore(mockPagination.hasNextPage);
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "An error occurred";

@@ -20,7 +20,7 @@ export default function SleepingArrangements({
   return (
     <section className="border-b border-gray-200 pb-6 sm:pb-8">
       <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
-        Where you'll sleep
+        Where you&apos;ll sleep
       </h2>
 
       {/* Bedroom Configuration */}

@@ -78,12 +78,8 @@ const amenityCategories = {
   ],
 };
 
-export default function AmenitiesSection({
-  amenities,
-  allAmenities,
-}: AmenitiesSectionProps) {
+export default function AmenitiesSection({ amenities }: AmenitiesSectionProps) {
   const [showAll, setShowAll] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   // Show first 10 amenities by default, all if showAll is true
   const displayedAmenities = showAll ? amenities : amenities.slice(0, 10);

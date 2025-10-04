@@ -383,7 +383,7 @@ export function PropertyGrid({
   if (loading && properties.length === 0) {
     return (
       <div className={`${getGridClasses()} ${className}`}>
-        {Array.from({ length: loadingCount }).map((_, index) => (
+        {Array.from({ length: loadingCount }).map((_: unknown, index) => (
           <PropertyCardSkeleton
             key={index}
             imageAspectRatio={imageAspectRatio}
@@ -440,12 +440,14 @@ export function PropertyGrid({
       ))}
       {/* Loading more cards */}
       {loading &&
-        Array.from({ length: Math.min(4, loadingCount) }).map((_, index) => (
-          <PropertyCardSkeleton
-            key={`loading-${index}`}
-            imageAspectRatio={imageAspectRatio}
-          />
-        ))}
+        Array.from({ length: Math.min(4, loadingCount) }).map(
+          (_: unknown, index) => (
+            <PropertyCardSkeleton
+              key={`loading-${index}`}
+              imageAspectRatio={imageAspectRatio}
+            />
+          )
+        )}
     </div>
   );
 }
@@ -595,7 +597,7 @@ export function PropertyDetailsSkeleton() {
 
       {/* Amenities skeleton */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        {[...Array(8)].map((_, i) => (
+        {[...Array(8)].map((_: unknown, i) => (
           <div
             key={i}
             className="h-10 sm:h-12 bg-gray-200 rounded relative overflow-hidden"
@@ -611,7 +613,7 @@ export function PropertyDetailsSkeleton() {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200 animate-[shimmer_2s_infinite]"></div>
         </div>
         <div className="space-y-3 sm:space-y-4">
-          {[...Array(3)].map((_, i) => (
+          {[...Array(3)].map((_: unknown, i) => (
             <div
               key={i}
               className="h-12 sm:h-14 bg-gray-200 rounded relative overflow-hidden"

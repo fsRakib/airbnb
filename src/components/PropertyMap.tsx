@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 interface Location {
   city: string;
@@ -22,7 +22,6 @@ export default function PropertyMap({
 }: PropertyMapProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const mapRef = useRef<HTMLDivElement>(null);
 
   // Mock coordinates for demo (in real app, these would come from backend)
   const demoCoordinates: [number, number] = location.coordinates || [
@@ -52,7 +51,7 @@ export default function PropertyMap({
     return (
       <section className="border-b border-gray-200 pb-8">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">
-          Where you'll be
+          Where you&apos;ll be
         </h2>
         <div className="h-96 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center">
           <div className="text-gray-500">Loading map...</div>
@@ -64,7 +63,7 @@ export default function PropertyMap({
   return (
     <section className="border-b border-gray-200 pb-8">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">
-        Where you'll be
+        Where you&apos;ll be
       </h2>
 
       {/* Map Container */}
@@ -227,14 +226,14 @@ export default function PropertyMap({
               <>
                 This is a popular area known for its vibrant local scene and
                 convenient access to key attractions. The exact address will be
-                shared once your reservation is confirmed to protect the host's
-                privacy.
+                shared once your reservation is confirmed to protect the
+                host&apos;s privacy.
               </>
             ) : (
               <>
                 Experience the best of {location.city} from this centrally
-                located property. You'll be within walking distance of local
-                attractions, restaurants, and public transportation.
+                located property. You&apos;ll be within walking distance of
+                local attractions, restaurants, and public transportation.
               </>
             )}
           </p>

@@ -138,7 +138,7 @@ export default function AirbnbPropertyCard({
           {/* Image Dots */}
           {property.images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1">
-              {property.images.map((_, index) => (
+              {property.images.map((_: unknown, index) => (
                 <button
                   key={index}
                   onClick={(e) => {

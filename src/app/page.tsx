@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import Header from "@/components/Header";
+
 import DestinationCarousel, {
   sampleDestinations,
 } from "@/components/DestinationCarousel";
@@ -19,7 +19,6 @@ export default function Home() {
   if (hasSearchParams) {
     return (
       <div className="min-h-screen bg-white">
-       
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-2xl font-semibold text-gray-900 mb-8">
             Search Results
@@ -44,7 +43,7 @@ export default function Home() {
         {/* Main Search Area */}
         <div className="pt-6 pb-12">
           <EnhancedSearchBox
-            onSearch={(data: any) => {
+            onSearch={(data: unknown) => {
               // Handle search functionality
               console.log("Search data:", data);
             }}
