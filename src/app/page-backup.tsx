@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import Header from "@/components/Header";
 import SearchForm from "@/components/SearchForm";
 
@@ -126,11 +127,13 @@ export default function Home() {
               <div key={index} className="flex-shrink-0">
                 <div className="group cursor-pointer">
                   <div className="relative aspect-square rounded-xl overflow-hidden mb-3">
-                    <img
+                    <Image
                       src={`https://images.unsplash.com/photo-${
                         1500000000000 + index * 1000
                       }?w=400&h=400&fit=crop&crop=center`}
                       alt={`Property ${index}`}
+                      width={400}
+                      height={400}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <button className="absolute top-3 right-3 w-7 h-7 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center transition-all">
@@ -233,11 +236,13 @@ export default function Home() {
               <div key={index} className="flex-shrink-0">
                 <div className="group cursor-pointer">
                   <div className="relative aspect-square rounded-xl overflow-hidden mb-3">
-                    <img
+                    <Image
                       src={`https://images.unsplash.com/photo-${
                         1500000000000 + index * 1000
                       }?w=400&h=400&fit=crop&crop=center`}
                       alt={`Property ${index}`}
+                      width={400}
+                      height={400}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <button className="absolute top-3 right-3 w-7 h-7 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center transition-all">
@@ -342,11 +347,13 @@ export default function Home() {
               <div key={index} className="flex-shrink-0">
                 <div className="group cursor-pointer">
                   <div className="relative aspect-square rounded-xl overflow-hidden mb-3">
-                    <img
+                    <Image
                       src={`https://images.unsplash.com/photo-${
                         1500000000000 + index * 1000
                       }?w=400&h=400&fit=crop&crop=center`}
                       alt={`Property ${index}`}
+                      width={400}
+                      height={400}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <button className="absolute top-3 right-3 w-7 h-7 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center transition-all">

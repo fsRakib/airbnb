@@ -31,15 +31,6 @@ interface Pagination {
   limit: number;
 }
 
-interface PropertiesResponse {
-  success: boolean;
-  data: {
-    properties: Property[];
-    pagination: Pagination;
-    filters: Record<string, unknown>;
-  };
-}
-
 interface UsePropertiesParams {
   location?: string;
   checkIn?: string;
@@ -61,24 +52,6 @@ export function useProperties(params: UsePropertiesParams = {}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
-
-  const buildQueryString = useCallback((searchParams: UsePropertiesParams) => {
-    const query = new URLSearchParams();
-
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        if (Array.isArray(value)) {
-          if (value.length > 0) {
-            query.set(key, value.join(","));
-          }
-        } else {
-          query.set(key, value.toString());
-        }
-      }
-    });
-
-    return query.toString();
-  }, []);
 
   const fetchProperties = useCallback(
     async (searchParams: UsePropertiesParams, append = false) => {
@@ -211,7 +184,7 @@ export function useProperties(params: UsePropertiesParams = {}) {
         setLoading(false);
       }
     },
-    [buildQueryString]
+    []
   );
 
   const loadMore = useCallback(() => {

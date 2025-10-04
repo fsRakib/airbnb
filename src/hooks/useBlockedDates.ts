@@ -8,7 +8,7 @@ interface UseBlockedDatesParams {
   checkOut?: string;
 }
 
-export function useBlockedDates(params: UseBlockedDatesParams = {}) {
+export function useBlockedDates(_params: UseBlockedDatesParams = {}) {
   const [blockedDates, setBlockedDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ export function useBlockedDates(params: UseBlockedDatesParams = {}) {
     } finally {
       setLoading(false);
     }
-  }, [params.propertyId]);
+  }, []);
 
   useEffect(() => {
     fetchBlockedDates();

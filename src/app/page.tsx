@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 import DestinationCarousel, {
@@ -8,7 +9,7 @@ import DestinationCarousel, {
 import Footer from "@/components/Footer";
 import EnhancedSearchBox from "@/components/EnhancedSearchBox";
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const hasSearchParams =
     searchParams.get("location") ||
@@ -197,5 +198,13 @@ export default function Home() {
       {/* Footer */}
       <Footer />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <HomeContent />
+    </Suspense>
   );
 }
